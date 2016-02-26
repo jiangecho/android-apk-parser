@@ -21,6 +21,7 @@ public class AndroidApk {
     private String minSdkVersion;
     private String targetSdkVersion;
     private String maxSdkVersion;
+    private String appLabel;
 
     private class ManifestListener implements BinaryXmlListener {
         public void onXmlEntry(String path, String name, Attribute... attrs) {
@@ -44,6 +45,14 @@ public class AndroidApk {
                         targetSdkVersion = attrib.getValue();
                     } else if ("maxSdkVersion".equals(attrib.getName())) {
                         maxSdkVersion = attrib.getValue();
+                    }
+                }
+            }
+
+            if ("application".equals(name)) {
+                for (Attribute attrib : attrs) {
+                    if ("label".equals(attrib.getName())) {
+                        appLabel= attrib.getValue();
                     }
                 }
             }
@@ -76,11 +85,9 @@ public class AndroidApk {
 
     /**
      * Takes as an input APK as a stream. At the end, the stream is closed.
-     * 
-     * @param apkfileInputStream
-     *            apk file stream
-     * @throws IOException
-     *             in case of error of reading/parsing data
+     *
+     * @param apkfileInputStream apk file stream
+     * @throws IOException in case of error of reading/parsing data
      */
     public AndroidApk(InputStream apkfileInputStream) throws IOException {
         InputStream in = null;
@@ -132,4 +139,7 @@ public class AndroidApk {
         return maxSdkVersion;
     }
 
+    public String getAppLabel() {
+        return appLabel;
+    }
 }
